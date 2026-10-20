@@ -1,0 +1,67 @@
+# Portable AI context manifest — agent-agnostic.
+# Start here. Read further documentation only when the current task requires it.
+
+project:
+  name: time-tunnel
+  summary: >-
+    An interactive timeline of human history and world myths. Swipe the timeline and a
+    lantern-bearer walks through hand-painted canvas scenes, one per story.
+  languages: [html, css, javascript]
+  package_manager: none
+  framework: none
+
+instructions:
+  primary: CLAUDE.md
+  repo_map: .ai/repo-map.md   # a LINE INDEX into index.html — read before opening anything
+
+entry_points:
+  - index.html                # the whole application, generated — do not hand-edit
+
+generated:                    # build output that now LEADS its generator
+  index.html:
+    built_by: build.py        # NOT in this repository
+    from: stories.json        # NOT in this repository
+    note: >-
+      Contains the animated diorama, which build.py's template does NOT produce.
+      Editing it is discarded by a rebuild; rebuilding silently drops the diorama.
+      Neither action is safe today. See docs/adr/0001.
+
+documentation:
+  decisions: docs/adr/
+
+important_directories:
+  tasks: .ai/tasks            # per-task checkpoints; delete when the work merges
+
+deploy:
+  host: github-pages
+  branch: main
+  path: /                     # index.html must stay at the repo root
+  visibility: public          # required for Pages on a free account
+  requires: .nojekyll         # MISSING — a 0-byte `download` sits in its place
+
+ignore:
+  - .git
+
+hazards:                      # this repo's specific traps
+  - index.html is 510 KB / 3339 lines — never read it whole (~130k tokens)
+  - line 359 is a single ~300 KB JSON line; always pipe grep through `cut -c1-110`
+  - localStorage key `time-tunnel-v2` holds visitor progress; changing its shape wipes it
+  - the diorama script must load AFTER the app script; it reads track/stations/centers/layout/S/G/LN/line
+  - everything committed here is served publicly by GitHub Pages
+
+commands:
+  run: open index.html in a browser
+  serve: python3 -m http.server 8000
+  build: DO NOT RUN — build.py is absent, and rebuilding would drop the diorama
+  test: none
+  lint: none
+
+retrieval_order:
+  - grep -n ... | cut -c1-110
+  - the line index in .ai/repo-map.md
+  - sed -n 'START,ENDp' index.html
+  - never the whole file
+
+conventions:
+  commits: small and prefixed (feat, fix, refactor, docs, chore); ask before committing
+  canvas: hand-rolled primitives (paint, stroke, poly, ell) — no drawing library
