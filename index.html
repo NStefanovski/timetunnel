@@ -288,6 +288,29 @@ button.side.chosen{box-shadow:0 0 0 2px var(--gold) inset;background:color-mix(i
   .card.first{padding-bottom:48px}
   .hint{bottom:6px}
 }
+/* desktop: added by hand on the published page, not by build.py. Port this block and the
+   .rig/.aside wrappers in #machine to the template. Below 1024px nothing changes. */
+.aside{display:contents}
+@media (min-width:1024px){
+  .app{max-width:1280px;grid-template-columns:200px minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr);
+    grid-template-areas:"top top" "tabs lines" "tabs main"}
+  .top{grid-area:top;padding:18px 24px 12px}
+  .lines{grid-area:lines;margin:0 24px 8px 12px}
+  main{grid-area:main}
+  .tabs{grid-area:tabs;grid-template-columns:1fr;align-content:start;gap:6px;padding:4px 0 24px 16px;background:none}
+  .tab{flex-direction:row;justify-content:flex-start;gap:12px;min-height:48px;padding:0 16px;font-size:12px}
+  .view{padding-inline:12px 24px}
+  #machine{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,420px);column-gap:36px;align-items:start}
+  .rig{position:sticky;top:0;z-index:1;min-width:0;padding-bottom:12px;background:var(--night)}
+  .aside{display:flex;flex-direction:column;min-width:0}
+  .aside .panel{margin-top:14px}
+  .digits{font-size:clamp(72px,9vw,120px)}
+  .qhome{max-width:880px;margin:0 auto}
+  .modes{grid-template-columns:1fr 1fr}
+  .sheet{position:fixed;justify-content:center;align-items:center;padding:32px}
+  .sheet-in{width:min(680px,100%);max-height:100%;border-radius:24px;padding-bottom:24px}
+  .toast{bottom:28px}
+}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
@@ -306,6 +329,7 @@ button.side.chosen{box-shadow:0 0 0 2px var(--gold) inset;background:color-mix(i
 
   <main>
     <section class="view" id="machine" aria-label="Time machine">
+      <div class="rig">
       <div class="dash">
         <div class="kicker">Now visiting · <i id="odoVol">Volume 1</i></div>
         <div class="odo">
@@ -323,9 +347,12 @@ button.side.chosen{box-shadow:0 0 0 2px var(--gold) inset;background:color-mix(i
         <div class="car"><span>You are here</span></div>
         <div class="track" id="track" tabindex="0" aria-label="Timeline. Swipe or use arrow keys to travel."></div>
       </div>
+      </div>
 
-      <article class="panel" id="panel"></article>
-      <div class="scale-box" id="scaleBox"></div>
+      <div class="aside">
+        <article class="panel" id="panel"></article>
+        <div class="scale-box" id="scaleBox"></div>
+      </div>
     </section>
 
     <section class="view feedview" id="feedView" aria-label="Story scroll" hidden>
